@@ -2,8 +2,8 @@ package com.psjava.ssyx.acl.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.psjava.ssyx.acl.service.AdminRoleService;
 import com.psjava.ssyx.acl.service.AdminService;
-import com.psjava.ssyx.acl.service.RoleService;
 import com.psjava.ssyx.common.utils.MD5;
 import com.psjava.ssyx.model.acl.Admin;
 import com.psjava.ssyx.vo.acl.AdminQueryVo;
@@ -25,7 +25,7 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
     @Autowired
-    private RoleService roleService;
+    private AdminRoleService adminRoleService;
 
     @ApiOperation("后台用户列表")
     @GetMapping("{page}/{limit}")
@@ -77,14 +77,14 @@ public class AdminController {
     @ApiOperation("根据后台用户id获取角色数据")
     @GetMapping("/toAssign/{adminId}")
     public Result toAssign(@PathVariable Long adminId) {
-        Map<String, Object> roleMap = roleService.getRoleByUserId(adminId);
+        Map<String, Object> roleMap = adminRoleService.getRoleByUserId(adminId);
         return Result.ok(roleMap);
     }
 
     @ApiOperation(value = "为后台用户进行角色分配")
     @PostMapping("/doAssign")
     public Result doAssign(@RequestParam Long adminId,@RequestParam Long[] roleId) {
-        roleService.saveAdminRoleRelationShip(adminId, roleId);
+        adminRoleService.saveAdminRoleRelationShip(adminId, roleId);
         return Result.ok(null);
     }
 }

@@ -23,7 +23,7 @@ import java.util.List;
  * @author pshawn
  * @since 2023-06-28
  */
-@Api("商品分类管理")
+@Api(tags = "商品分类管理")
 @RestController
 @RequestMapping("/admin/product/category")
 @CrossOrigin

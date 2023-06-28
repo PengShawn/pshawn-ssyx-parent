@@ -37,4 +37,4 @@ build/
 ### Mac OS ###
 .DS_Store
 
-service/service-product/src/main/resources/application-dev.yml
+/service/service-product/src/main/resources/application-dev.yml

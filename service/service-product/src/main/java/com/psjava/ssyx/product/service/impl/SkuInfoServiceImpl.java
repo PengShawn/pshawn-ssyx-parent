@@ -1,6 +1,7 @@
 package com.psjava.ssyx.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.psjava.ssyx.model.product.SkuAttrValue;
@@ -105,5 +106,107 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> impl
             }
             skuAttrValueService.saveBatch(skuAttrValueList);
         }
+    }
+
+    //获取商品
+    @Override
+    public SkuInfoVo getSkuInfoVo(Long skuId) {
+        SkuInfoVo skuInfoVo = new SkuInfoVo();
+
+        SkuInfo skuInfo = baseMapper.selectById(skuId);
+        List<SkuImage> skuImageList = skuImagesService.findBySkuId(skuId);
+        List<SkuPoster> skuPosterList = skuPosterService.findBySkuId(skuId);
+        List<SkuAttrValue> skuAttrValueList = skuAttrValueService.findBySkuId(skuId);
+
+        BeanUtils.copyProperties(skuInfo, skuInfoVo);
+        skuInfoVo.setSkuImagesList(skuImageList);
+        skuInfoVo.setSkuPosterList(skuPosterList);
+        skuInfoVo.setSkuAttrValueList(skuAttrValueList);
+        return skuInfoVo;
+    }
+
+    //修改商品
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public void updateSkuInfo(SkuInfoVo skuInfoVo) {
+        Long id = skuInfoVo.getId();
+        SkuInfo skuInfo = new SkuInfo();
+        BeanUtils.copyProperties(skuInfoVo, skuInfo);
+        //更新sku信息
+        this.updateById(skuInfo);
+
+        //删除sku海报
+        skuPosterService.remove(new LambdaQueryWrapper<SkuPoster>().eq(SkuPoster::getSkuId, id));
+        //保存sku海报
+        List<SkuPoster> skuPosterList = skuInfoVo.getSkuPosterList();
+        if(!CollectionUtils.isEmpty(skuPosterList)) {
+            for(SkuPoster skuPoster : skuPosterList) {
+                skuPoster.setSkuId(id);
+            }
+            skuPosterService.saveBatch(skuPosterList);
+        }
+
+        //删除sku图片
+        skuImagesService.remove(new LambdaQueryWrapper<SkuImage>().eq(SkuImage::getSkuId, id));
+        //保存sku图片
+        List<SkuImage> skuImagesList = skuInfoVo.getSkuImagesList();
+        if(!CollectionUtils.isEmpty(skuImagesList)) {
+            int sort = 1;
+            for(SkuImage skuImages : skuImagesList) {
+                skuImages.setSkuId(id);
+                skuImages.setSort(sort);
+                sort++;
+            }
+            skuImagesService.saveBatch(skuImagesList);
+        }
+
+        //删除sku平台属性
+        skuAttrValueService.remove(new LambdaQueryWrapper<SkuAttrValue>().eq(SkuAttrValue::getSkuId, id));
+        //保存sku平台属性
+        List<SkuAttrValue> skuAttrValueList = skuInfoVo.getSkuAttrValueList();
+        if(!CollectionUtils.isEmpty(skuAttrValueList)) {
+            int sort = 1;
+            for(SkuAttrValue skuAttrValue : skuAttrValueList) {
+                skuAttrValue.setSkuId(id);
+                skuAttrValue.setSort(sort);
+                sort++;
+            }
+            skuAttrValueService.saveBatch(skuAttrValueList);
+        }
+    }
+
+    //商品审核
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public void check(Long skuId, Integer status) {
+        // 更改发布状态
+        SkuInfo skuInfoUp = baseMapper.selectById(skuId);
+        skuInfoUp.setCheckStatus(status);
+        baseMapper.updateById(skuInfoUp);
+    }
+
+    //商品上架
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public void publish(Long skuId, Integer status) {
+        SkuInfo skuInfoUp = baseMapper.selectById(skuId);
+        // 更改发布状态
+        if(status == 1) {
+            skuInfoUp.setPublishStatus(1);
+            baseMapper.updateById(skuInfoUp);
+            //TODO 商品上架 后续会完善：发送mq消息更新es数据
+        } else {
+            skuInfoUp.setPublishStatus(0);
+            baseMapper.updateById(skuInfoUp);
+            //TODO 商品下架 后续会完善：发送mq消息更新es数据
+        }
+    }
+
+    //新人专享
+    @Override
+    public void isNewPerson(Long skuId, Integer status) {
+        SkuInfo skuInfoUp = baseMapper.selectById(skuId);
+        skuInfoUp.setIsNewPerson(status);
+        baseMapper.updateById(skuInfoUp);
     }
 }

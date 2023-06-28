@@ -19,6 +19,6 @@ spring:
 
 aliyun:
   endpoint: oss-cn-shanghai.aliyuncs.com
-  keyid: LTAI5tJxy8Nqu9WwnJwssukC
-  keysecret: DmgiEQI3JGgOmHjfwWoDEuCAmNSYxD
+  keyid: keyid
+  keysecret: keysecret
   bucketname: ssyx-pshawn

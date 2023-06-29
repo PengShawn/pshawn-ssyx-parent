@@ -8,6 +8,8 @@ import com.psjava.ssyx.model.product.SkuAttrValue;
 import com.psjava.ssyx.model.product.SkuImage;
 import com.psjava.ssyx.model.product.SkuInfo;
 import com.psjava.ssyx.model.product.SkuPoster;
+import com.psjava.ssyx.mq.constant.MqConst;
+import com.psjava.ssyx.mq.service.RabbitService;
 import com.psjava.ssyx.product.mapper.SkuInfoMapper;
 import com.psjava.ssyx.product.service.SkuAttrValueService;
 import com.psjava.ssyx.product.service.SkuImageService;
@@ -43,6 +45,9 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> impl
 
     @Autowired
     private SkuAttrValueService skuAttrValueService;
+
+    @Autowired
+    private RabbitService rabbitService;
 
     @Override
     public IPage<SkuInfo> selectPage(Page<SkuInfo> pageParam, SkuInfoQueryVo skuInfoQueryVo) {
@@ -194,11 +199,13 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> impl
         if(status == 1) {
             skuInfoUp.setPublishStatus(1);
             baseMapper.updateById(skuInfoUp);
-            //TODO 商品上架 后续会完善：发送mq消息更新es数据
+            //商品上架：发送mq消息同步es
+            rabbitService.sendMessage(MqConst.EXCHANGE_GOODS_DIRECT, MqConst.ROUTING_GOODS_UPPER, skuId);
         } else {
             skuInfoUp.setPublishStatus(0);
             baseMapper.updateById(skuInfoUp);
-            //TODO 商品下架 后续会完善：发送mq消息更新es数据
+            //商品下架：发送mq消息同步es
+            rabbitService.sendMessage(MqConst.EXCHANGE_GOODS_DIRECT, MqConst.ROUTING_GOODS_LOWER, skuId);
         }
     }
 

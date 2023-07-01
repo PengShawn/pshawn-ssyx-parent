@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/admin/acl/permission")
 @Api(tags = "菜单管理")
-//@CrossOrigin
 public class PermissionController {
     @Autowired
     private PermissionService permissionService;

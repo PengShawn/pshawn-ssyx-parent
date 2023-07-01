@@ -26,7 +26,6 @@ import java.util.List;
 @Api(tags = "商品分类管理")
 @RestController
 @RequestMapping("/admin/product/category")
-//@CrossOrigin
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;

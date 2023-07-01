@@ -28,7 +28,6 @@ import java.util.List;
 @Api(tags = "营销活动接口")
 @RestController
 @RequestMapping("/admin/activity/activityInfo")
-//@CrossOrigin
 public class ActivityInfoController {
     @Autowired
     private ActivityInfoService activityInfoService;

@@ -20,7 +20,6 @@ import java.util.Map;
 @Api(tags = "后台用户接口")
 @RestController
 @RequestMapping("/admin/acl/user")
-//@CrossOrigin
 public class AdminController {
     @Autowired
     private AdminService adminService;

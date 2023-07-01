@@ -25,4 +25,8 @@ public interface ProductFeignClient {
     //根据关键字获取sku列表，活动使用
     @GetMapping("/api/product/inner/findSkuInfoByKeyword/{keyword}")
     List<SkuInfo> findSkuInfoByKeyword(@PathVariable("keyword") String keyword);
+
+    //批量获取分类信息
+    @PostMapping("/api/product/inner/findCategoryList")
+    List<Category> findCategoryList(@RequestBody List<Long> categoryIdList);
 }

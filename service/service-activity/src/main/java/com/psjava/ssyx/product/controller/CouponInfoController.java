@@ -26,7 +26,7 @@ import java.util.List;
 @Api(tags = "优惠券接口")
 @RestController
 @RequestMapping("/admin/activity/couponInfo")
-@CrossOrigin
+//@CrossOrigin
 public class CouponInfoController {
     @Autowired
     private CouponInfoService couponInfoService;

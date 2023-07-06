@@ -1,5 +1,6 @@
 package com.psjava.ssyx.user.controller;
 
+import com.psjava.ssyx.common.auth.AuthContextHolder;
 import com.psjava.ssyx.common.utils.JwtHelper;
 import io.swagger.annotations.Api;
 import com.alibaba.fastjson.JSONObject;
@@ -102,5 +103,16 @@ public class WeixinApiController {
         UserLoginVo userLoginVo = this.userService.getUserLoginVo(user.getId());
         redisTemplate.opsForValue().set(RedisConst.USER_LOGIN_KEY_PREFIX + user.getId(), userLoginVo, RedisConst.USERKEY_TIMEOUT, TimeUnit.DAYS);
         return Result.ok(map);
+    }
+
+    @PostMapping("/auth/updateUser")
+    @ApiOperation(value = "更新用户昵称与头像")
+    public Result updateUser(@RequestBody User user) {
+        User user1 = userService.getById(AuthContextHolder.getUserId());
+        //把昵称更新为微信用户
+        user1.setNickName(user.getNickName().replaceAll("[ue000-uefff]", "*"));
+        user1.setPhotoUrl(user.getPhotoUrl());
+        userService.updateById(user1);
+        return Result.ok(null);
     }
 }

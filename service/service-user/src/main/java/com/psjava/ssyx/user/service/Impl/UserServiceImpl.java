@@ -26,7 +26,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Resource
     private LeaderMapper leaderMapper;
 
-    @Resource
+//    @Resource
 //    private RegionFeignClient regionFeignClient;
 
     @Override

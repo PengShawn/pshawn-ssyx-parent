@@ -18,8 +18,12 @@ import java.util.List;
  */
 @Repository
 public interface ActivityInfoMapper extends BaseMapper<ActivityInfo> {
-
+    //如果之前参加过，活动正在进行中，排除商品
     List<Long> selectExistSkuIdList(@Param("skuIdList") List<Long> skuIdList);
 
+    //根据skuId进行查询，查询sku对应活动里面规则列表
     List<ActivityRule> selectActivityRuleList(@Param("skuId") Long skuId);
+
+    //根据skuId进行查询，查询sku对应活动里面规则列表
+    List<ActivityRule> findActivityRule(@Param("skuId") Long skuId);
 }

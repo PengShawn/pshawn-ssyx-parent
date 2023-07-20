@@ -228,4 +228,22 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> impl
     public List<SkuInfo> findSkuInfoByKeyword(String keyword) {
         return baseMapper.selectList(new LambdaQueryWrapper<SkuInfo>().like(SkuInfo::getSkuName, keyword));
     }
+
+    //获取新人专享商品
+    @Override
+    public List<SkuInfo> findNewPersonSkuInfoList() {
+        //条件1：is_new_person=1
+        //条件2：publish_status=1
+        //条件3：显示其中三个
+        //获取第一页数据，每页显示三条记录
+        Page<SkuInfo> pageParam = new Page<>(1,3);
+        //封装条件
+        LambdaQueryWrapper<SkuInfo> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SkuInfo::getIsNewPerson,1);
+        wrapper.eq(SkuInfo::getPublishStatus,1);
+        wrapper.orderByDesc(SkuInfo::getStock);//库存排序
+        //调用方法查询
+        IPage<SkuInfo> skuInfoPage = baseMapper.selectPage(pageParam, wrapper);
+        return skuInfoPage.getRecords();
+    }
 }

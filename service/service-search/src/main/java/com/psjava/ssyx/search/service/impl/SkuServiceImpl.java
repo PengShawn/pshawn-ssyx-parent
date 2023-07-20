@@ -8,7 +8,12 @@ import com.psjava.ssyx.model.search.SkuEs;
 import com.psjava.ssyx.search.repository.SkuRepository;
 import com.psjava.ssyx.search.service.SkuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class SkuServiceImpl implements SkuService {
@@ -51,5 +56,12 @@ public class SkuServiceImpl implements SkuService {
     @Override
     public void lowerSku(Long skuId) {
         skuRepository.deleteById(skuId);
+    }
+
+    @Override
+    public List<SkuEs> findHotSkuList() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<SkuEs> pageModel = skuRepository.findByOrderByHotScoreDesc(pageable);
+        return pageModel.getContent();
     }
 }

@@ -1,6 +1,7 @@
 package com.psjava.ssyx.search.controller;
 
 import com.psjava.ssyx.common.result.Result;
+import com.psjava.ssyx.model.search.SkuEs;
 import com.psjava.ssyx.search.service.SkuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Api(tags = "search-商品上下架")
 @RestController
@@ -29,5 +32,11 @@ public class SkuApiController {
     public Result lowerGoods(@PathVariable("skuId") Long skuId) {
         skuService.lowerSku(skuId);
         return Result.ok(null);
+    }
+
+    @ApiOperation(value = "获取爆品商品")
+    @GetMapping("inner/findHotSkuList")
+    public List<SkuEs> findHotSkuList() {
+        return skuService.findHotSkuList();
     }
 }

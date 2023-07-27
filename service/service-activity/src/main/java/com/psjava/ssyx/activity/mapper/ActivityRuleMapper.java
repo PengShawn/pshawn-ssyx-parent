@@ -1,4 +1,4 @@
-package com.psjava.ssyx.product.mapper;
+package com.psjava.ssyx.activity.mapper;
 
 import com.psjava.ssyx.model.activity.ActivityRule;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

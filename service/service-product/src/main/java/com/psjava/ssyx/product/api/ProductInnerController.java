@@ -4,6 +4,7 @@ import com.psjava.ssyx.model.product.Category;
 import com.psjava.ssyx.model.product.SkuInfo;
 import com.psjava.ssyx.product.service.CategoryService;
 import com.psjava.ssyx.product.service.SkuInfoService;
+import com.psjava.ssyx.vo.product.SkuInfoVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +60,11 @@ public class ProductInnerController {
     @GetMapping("inner/findNewPersonSkuInfoList")
     public List<SkuInfo> findNewPersonSkuInfoList() {
         return skuInfoService.findNewPersonSkuInfoList();
+    }
+
+    @ApiOperation(value = "根据skuId获取sku信息")
+    @GetMapping("inner/getSkuInfoVo/{skuId}")
+    public SkuInfoVo getSkuInfoVo(@PathVariable("skuId") Long skuId) {
+        return skuInfoService.getSkuInfoVo(skuId);
     }
 }

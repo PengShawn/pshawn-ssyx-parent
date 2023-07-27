@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.psjava.ssyx.product.mapper.ActivityInfoMapper">
+<mapper namespace="com.psjava.ssyx.activity.mapper.ActivityInfoMapper">
     <resultMap id="ActivityRuleMap" type="com.psjava.ssyx.model.activity.ActivityRule" autoMapping="true"></resultMap>
     <resultMap id="CouponInfoMap" type="com.psjava.ssyx.model.activity.CouponInfo" autoMapping="true"></resultMap>
 

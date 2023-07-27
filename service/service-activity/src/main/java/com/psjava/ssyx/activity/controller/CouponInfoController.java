@@ -1,11 +1,11 @@
-package com.psjava.ssyx.product.controller;
+package com.psjava.ssyx.activity.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.psjava.ssyx.activity.service.CouponInfoService;
 import com.psjava.ssyx.common.result.Result;
 import com.psjava.ssyx.model.activity.CouponInfo;
-import com.psjava.ssyx.product.service.CouponInfoService;
 import com.psjava.ssyx.vo.activity.CouponRuleVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

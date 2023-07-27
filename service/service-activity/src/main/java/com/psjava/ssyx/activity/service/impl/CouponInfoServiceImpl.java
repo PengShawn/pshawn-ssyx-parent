@@ -1,18 +1,18 @@
-package com.psjava.ssyx.product.service.impl;
+package com.psjava.ssyx.activity.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.psjava.ssyx.activity.mapper.CouponInfoMapper;
+import com.psjava.ssyx.activity.mapper.CouponRangeMapper;
+import com.psjava.ssyx.activity.mapper.CouponUseMapper;
+import com.psjava.ssyx.activity.service.CouponInfoService;
 import com.psjava.ssyx.client.product.ProductFeignClient;
 import com.psjava.ssyx.enums.CouponRangeType;
 import com.psjava.ssyx.model.activity.CouponInfo;
 import com.psjava.ssyx.model.activity.CouponRange;
 import com.psjava.ssyx.model.product.Category;
 import com.psjava.ssyx.model.product.SkuInfo;
-import com.psjava.ssyx.product.mapper.CouponInfoMapper;
-import com.psjava.ssyx.product.mapper.CouponRangeMapper;
-import com.psjava.ssyx.product.mapper.CouponUseMapper;
-import com.psjava.ssyx.product.service.CouponInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.psjava.ssyx.vo.activity.CouponRuleVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,5 +124,13 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
     @Override
     public List<CouponInfo> findCouponByKeyword(String keyword) {
         return baseMapper.selectList(new LambdaQueryWrapper<CouponInfo>().like(CouponInfo::getCouponName, keyword));
+    }
+
+    //根据skuid和userid查询优惠券信息
+    @Override
+    public List<CouponInfo> findCouponInfoList(Long skuId, Long userId) {
+        SkuInfo skuInfo = productFeignClient.getSkuInfo(skuId);
+        if(null == skuInfo) return new ArrayList<>();
+        return baseMapper.selectCouponInfoList(skuInfo.getId(), skuInfo.getCategoryId(), userId);
     }
 }

@@ -58,4 +58,12 @@ public class SkuApiController {
     public List<SkuEs> findHotSkuList() {
         return skuService.findHotSkuList();
     }
+
+    @ApiOperation(value = "更新商品incrHotScore")
+    @GetMapping("inner/incrHotScore/{skuId}")
+    public Boolean incrHotScore(@PathVariable("skuId") Long skuId) {
+        // 调用服务层
+        skuService.incrHotScore(skuId);
+        return true;
+    }
 }

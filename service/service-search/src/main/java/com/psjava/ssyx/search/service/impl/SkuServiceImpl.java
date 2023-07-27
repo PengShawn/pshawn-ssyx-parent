@@ -14,12 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +32,8 @@ public class SkuServiceImpl implements SkuService {
     private ProductFeignClient productFeignClient;
     @Autowired
     private ActivityFeignClient activityFeignClient;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     public void upperSku(Long skuId) {
@@ -97,5 +101,21 @@ public class SkuServiceImpl implements SkuService {
             }
         }
         return page;
+    }
+
+    //更新商品incrHotScore
+    @Override
+    public void incrHotScore(Long skuId) {
+        // 定义key
+        String hotKey = "hotScore";
+        // 保存数据
+        Double hotScore = redisTemplate.opsForZSet().incrementScore(hotKey, "skuId:" + skuId, 1);
+        if (hotScore % 10==0){
+            // 更新es
+            Optional<SkuEs> optional = skuRepository.findById(skuId);
+            SkuEs skuEs = optional.get();
+            skuEs.setHotScore(Math.round(hotScore));
+            skuRepository.save(skuEs);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.psjava.ssyx.product.service;
+package com.psjava.ssyx.activity.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -38,4 +38,7 @@ public interface ActivityInfoService extends IService<ActivityInfo> {
 
     //根据skuId列表获取促销信息
     Map<Long, List<String>> findActivity(List<Long> skuIdList);
+
+    //根据skuId获取促销与优惠券信息
+    Map<String, Object> findActivityAndCoupon(Long skuId, Long userId);
 }

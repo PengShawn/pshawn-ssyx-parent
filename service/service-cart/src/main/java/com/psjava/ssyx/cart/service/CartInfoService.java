@@ -20,4 +20,13 @@ public interface CartInfoService {
 
     //查询购物车列表
     List<CartInfo> getCartList(Long userId);
+
+    //更新选中状态
+    void checkCart(Long userId, Integer isChecked, Long skuId);
+
+    //选择所有购物车
+    void checkAllCart(Long userId, Integer isChecked);
+
+    //批量选择购物车
+    void batchCheckCart(List<Long> skuIdList, Long userId, Integer isChecked);
 }

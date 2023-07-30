@@ -3,6 +3,7 @@ package com.psjava.ssyx.activity.mapper;
 import com.psjava.ssyx.model.activity.ActivityInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.psjava.ssyx.model.activity.ActivityRule;
+import com.psjava.ssyx.model.activity.ActivitySku;
 import feign.Param;
 import org.springframework.stereotype.Repository;
 
@@ -26,4 +27,7 @@ public interface ActivityInfoMapper extends BaseMapper<ActivityInfo> {
 
     //根据skuId进行查询，查询sku对应活动里面规则列表
     List<ActivityRule> findActivityRule(@Param("skuId") Long skuId);
+
+    //获取skuId列表对应的全部促销规则
+    List<ActivitySku> selectCartActivityList(@Param("skuIdList") List<Long> skuIdList);
 }

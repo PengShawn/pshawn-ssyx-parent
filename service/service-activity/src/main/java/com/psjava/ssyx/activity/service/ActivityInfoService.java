@@ -5,8 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.psjava.ssyx.model.activity.ActivityInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.psjava.ssyx.model.activity.ActivityRule;
+import com.psjava.ssyx.model.order.CartInfo;
 import com.psjava.ssyx.model.product.SkuInfo;
 import com.psjava.ssyx.vo.activity.ActivityRuleVo;
+import com.psjava.ssyx.vo.order.CartInfoVo;
+import com.psjava.ssyx.vo.order.OrderConfirmVo;
 
 import java.util.List;
 import java.util.Map;
@@ -41,4 +44,10 @@ public interface ActivityInfoService extends IService<ActivityInfo> {
 
     //根据skuId获取促销与优惠券信息
     Map<String, Object> findActivityAndCoupon(Long skuId, Long userId);
+
+    //获取购物车满足条件的促销与优惠券信息
+    OrderConfirmVo findCartActivityAndCoupon(List<CartInfo> cartInfoList, Long userId);
+
+    //获取购物车对应规则数据，商品按规则分组
+    List<CartInfoVo> findCartActivityList(List<CartInfo> cartInfoList);
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.psjava.ssyx.model.activity.CouponInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.psjava.ssyx.model.order.CartInfo;
 import com.psjava.ssyx.vo.activity.CouponRuleVo;
 
 import java.util.List;
@@ -35,4 +36,10 @@ public interface CouponInfoService extends IService<CouponInfo> {
 
     //根据skuid和userid查询优惠券信息
     List<CouponInfo> findCouponInfoList(Long skuId, Long userId);
+
+    //获取购物车中可使用优惠券列表
+    List<CouponInfo> findCartCouponInfo(List<CartInfo> cartInfoList, Long userId);
+
+    //获取优惠券范围对应的购物车列表
+    CouponInfo findRangeSkuIdList(List<CartInfo> cartInfoList, Long couponId);
 }

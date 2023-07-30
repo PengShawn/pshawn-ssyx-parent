@@ -19,4 +19,7 @@ import java.util.List;
 public interface CouponInfoMapper extends BaseMapper<CouponInfo> {
     //根据skuid和userid查询优惠券信息
     List<CouponInfo> selectCouponInfoList(@Param("skuId") Long skuId, @Param("categoryId") Long categoryId, @Param("userId") Long userId);
+
+    //获取用户全部优惠券
+    List<CouponInfo> selectCartCouponInfoList(@Param("userId")Long userId);
 }

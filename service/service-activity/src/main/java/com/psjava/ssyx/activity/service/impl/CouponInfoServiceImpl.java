@@ -1,6 +1,7 @@
 package com.psjava.ssyx.activity.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.psjava.ssyx.activity.mapper.CouponInfoMapper;
@@ -9,8 +10,10 @@ import com.psjava.ssyx.activity.mapper.CouponUseMapper;
 import com.psjava.ssyx.activity.service.CouponInfoService;
 import com.psjava.ssyx.client.product.ProductFeignClient;
 import com.psjava.ssyx.enums.CouponRangeType;
+import com.psjava.ssyx.enums.CouponStatus;
 import com.psjava.ssyx.model.activity.CouponInfo;
 import com.psjava.ssyx.model.activity.CouponRange;
+import com.psjava.ssyx.model.activity.CouponUse;
 import com.psjava.ssyx.model.order.CartInfo;
 import com.psjava.ssyx.model.product.Category;
 import com.psjava.ssyx.model.product.SkuInfo;
@@ -233,5 +236,18 @@ public class CouponInfoServiceImpl extends ServiceImpl<CouponInfoMapper, CouponI
             couponIdToSkuIdMap.put(couponId, new ArrayList<>(skuIdSet));
         }
         return couponIdToSkuIdMap;
+    }
+
+    @Override
+    public void updateCouponInfoUseStatus(Long couponId, Long userId, Long orderId) {
+        CouponUse couponUse = new CouponUse();
+        couponUse.setOrderId(orderId);
+        couponUse.setCouponStatus(CouponStatus.USED);
+        couponUse.setUsingTime(new Date());
+
+        LambdaQueryWrapper<CouponUse> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(CouponUse::getCouponId, couponId);
+        queryWrapper.eq(CouponUse::getUserId, userId);
+        couponUseMapper.update(couponUse, queryWrapper);
     }
 }

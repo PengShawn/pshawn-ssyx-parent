@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class CartInfoServiceImpl implements CartInfoService {
@@ -183,6 +184,27 @@ public class CartInfoServiceImpl implements CartInfoService {
             CartInfo cartInfo = hashOperations.get(skuId.toString());
             cartInfo.setIsChecked(isChecked);
             hashOperations.put(cartInfo.getSkuId().toString(), cartInfo);
+        });
+    }
+
+    //根据用户Id 查询购物车列表
+    @Override
+    public List<CartInfo> getCartCheckedList(Long userId) {
+        BoundHashOperations<String, String, CartInfo> boundHashOps = this.redisTemplate.boundHashOps(this.getCartKey(userId));
+        return Objects.requireNonNull(boundHashOps.values()).stream().filter((cartInfo) -> cartInfo.getIsChecked() == 1).collect(Collectors.toList());
+    }
+
+    //根据userId删除选中购物车记录
+    @Override
+    public void deleteCartChecked(Long userId) {
+        List<CartInfo> cartInfoList = this.getCartCheckedList(userId);
+        List<Long> skuIdList = cartInfoList.stream().map(CartInfo::getSkuId).collect(Collectors.toList());
+
+        String cartKey = getCartKey(userId);
+        //获取缓存对象
+        BoundHashOperations<String, String, CartInfo> hashOperations = redisTemplate.boundHashOps(cartKey);
+        skuIdList.forEach(skuId -> {
+            hashOperations.delete(skuId.toString());
         });
     }
 }

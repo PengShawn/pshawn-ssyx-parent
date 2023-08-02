@@ -6,6 +6,7 @@ import com.psjava.ssyx.model.product.SkuInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.psjava.ssyx.vo.product.SkuInfoQueryVo;
 import com.psjava.ssyx.vo.product.SkuInfoVo;
+import com.psjava.ssyx.vo.product.SkuStockLockVo;
 
 import java.util.List;
 
@@ -48,4 +49,7 @@ public interface SkuInfoService extends IService<SkuInfo> {
 
     //获取新人专享商品
     List<SkuInfo> findNewPersonSkuInfoList();
+
+    //锁定商品库存
+    Boolean checkAndLock(List<SkuStockLockVo> skuStockLockVoList, String orderNo);
 }

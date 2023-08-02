@@ -3,6 +3,7 @@ package com.psjava.ssyx.client.product;
 import com.psjava.ssyx.model.product.Category;
 import com.psjava.ssyx.model.product.SkuInfo;
 import com.psjava.ssyx.vo.product.SkuInfoVo;
+import com.psjava.ssyx.vo.product.SkuStockLockVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,4 +42,8 @@ public interface ProductFeignClient {
     //获取新人专享
     @GetMapping("/api/product/inner/findNewPersonSkuInfoList")
     List<SkuInfo> findNewPersonSkuInfoList();
+
+    //验证和锁定库存
+    @PostMapping("/api/product/inner/checkAndLock/{orderNo}")
+    Boolean checkAndLock(@RequestBody List<SkuStockLockVo> skuStockLockVoList, @PathVariable String orderNo);
 }

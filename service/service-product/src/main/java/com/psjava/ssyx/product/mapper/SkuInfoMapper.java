@@ -2,6 +2,7 @@ package com.psjava.ssyx.product.mapper;
 
 import com.psjava.ssyx.model.product.SkuInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +14,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface SkuInfoMapper extends BaseMapper<SkuInfo> {
 
+    SkuInfo checkStock(@Param("skuId") Long skuId, @Param("skuNum") Integer skuNum);
+
+    Integer lockStock(@Param("skuId")Long skuId, @Param("skuNum")Integer skuNum);
+
+    Integer unlockStock(@Param("skuId")Long skuId, @Param("skuNum")Integer skuNum);
 }

@@ -2,6 +2,7 @@ server:
   port: 8203
 
 mybatis-plus:
+  type-enums-package: com.psjava.ssyx.enums
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
@@ -10,9 +11,20 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/shequ-product?characterEncoding=utf-8&useSSL=false
-    username: user
-    password: pwd
-
+    username: root
+    password: root
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+    timeout: 1800000
+    password:
+    lettuce:
+      pool:
+        max-active: 20 #最大连接数
+        max-wait: -1    #最大阻塞等待时间(负数表示没限制)
+        max-idle: 5    #最大空闲
+        min-idle: 0     #最小空闲
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -20,8 +32,8 @@ spring:
   rabbitmq:
     host: localhost
     port: 5672
-    username: user
-    password: pwd
+    username: guest
+    password: guest
     publisher-confirm-type: CORRELATED  #发布确认模式，消息是否被成功发送到交换机
     publisher-returns: true
     listener:
@@ -32,7 +44,7 @@ spring:
 
 aliyun:
   endpoint: oss-cn-shanghai.aliyuncs.com
-  keyid: keyid
-  keysecret: keysecret
+  keyid: xxxxxxxxxxxxxxxxx
+  keysecret: xxxxxxxxxxxxxxxxxxxxx
   bucketname: ssyx-pshawn
 

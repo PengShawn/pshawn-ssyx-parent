@@ -291,6 +291,23 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfo> impl
         return true;
     }
 
+    @Override
+    public void minusStock(String orderNo) {
+        // 获取锁定库存的缓存信息
+        List<SkuStockLockVo> skuStockLockVoList = (List<SkuStockLockVo>)this.redisTemplate.opsForValue().get(RedisConst.SROCK_INFO + orderNo);
+        if (CollectionUtils.isEmpty(skuStockLockVoList)){
+            return ;
+        }
+
+        // 减库存
+        skuStockLockVoList.forEach(skuStockLockVo -> {
+            baseMapper.minusStock(skuStockLockVo.getSkuId(), skuStockLockVo.getSkuNum());
+        });
+
+        // 解锁库存之后，删除锁定库存的缓存。以防止重复解锁库存
+        redisTemplate.delete(RedisConst.SROCK_INFO + orderNo);
+    }
+
     //遍历list得到每个商品，验证库存并锁定库存，具备原子性
     private void checkLock(SkuStockLockVo skuStockLockVo){
         //公平锁，就是保证客户端获取锁的顺序，跟他们请求获取锁的顺序，是一样的。

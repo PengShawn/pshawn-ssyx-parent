@@ -20,7 +20,6 @@ import com.psjava.ssyx.model.order.OrderItem;
 import com.psjava.ssyx.mq.constant.MqConst;
 import com.psjava.ssyx.mq.service.RabbitService;
 import com.psjava.ssyx.order.mapper.OrderInfoMapper;
-import com.psjava.ssyx.order.mapper.OrderItemMapper;
 import com.psjava.ssyx.order.service.OrderInfoService;
 import com.psjava.ssyx.order.service.OrderItemService;
 import com.psjava.ssyx.vo.order.CartInfoVo;
@@ -411,5 +410,36 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         List<OrderItem> orderItemList = orderItemService.list(new LambdaQueryWrapper<OrderItem>().eq(OrderItem::getOrderId, orderInfo.getId()));
         orderInfo.setOrderItemList(orderItemList);
         return orderInfo;
+    }
+
+    @Override
+    public OrderInfo getOrderInfoByOrderNo(String orderNo) {
+        return baseMapper.selectOne(new LambdaQueryWrapper<OrderInfo>().eq(OrderInfo::getOrderNo, orderNo));
+    }
+
+    @Override
+    public void orderPay(String orderNo) {
+        OrderInfo orderInfo = this.getOrderInfoByOrderNo(orderNo);
+        if(null == orderInfo || orderInfo.getOrderStatus() != OrderStatus.UNPAID) return;
+
+        //更改订单状态
+        this.updateOrderStatus(orderInfo.getId(),  ProcessStatus.WAITING_DELEVER);
+        //扣减库存
+        rabbitService.sendMessage(MqConst.EXCHANGE_ORDER_DIRECT, MqConst.ROUTING_MINUS_STOCK, orderNo);
+    }
+
+    private void updateOrderStatus(Long orderId, ProcessStatus processStatus) {
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setId(orderId);
+        orderInfo.setProcessStatus(processStatus);
+        orderInfo.setOrderStatus(processStatus.getOrderStatus());
+        if(processStatus == ProcessStatus.WAITING_DELEVER) {
+            orderInfo.setPaymentTime(new Date());
+        } else if(processStatus == ProcessStatus.WAITING_LEADER_TAKE) {
+            orderInfo.setDeliveryTime(new Date());
+        } else if(processStatus == ProcessStatus.WAITING_USER_TAKE) {
+            orderInfo.setTakeTime(new Date());
+        }
+        baseMapper.updateById(orderInfo);
     }
 }

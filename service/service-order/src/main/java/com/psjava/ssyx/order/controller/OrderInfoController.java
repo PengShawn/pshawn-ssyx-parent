@@ -4,6 +4,7 @@ package com.psjava.ssyx.order.controller;
 import com.psjava.ssyx.common.result.Result;
 import com.psjava.ssyx.model.order.OrderInfo;
 import com.psjava.ssyx.order.service.OrderInfoService;
+import com.psjava.ssyx.order.service.OrderItemService;
 import com.psjava.ssyx.vo.order.OrderConfirmVo;
 import com.psjava.ssyx.vo.order.OrderSubmitVo;
 import io.swagger.annotations.Api;
@@ -46,6 +47,12 @@ public class OrderInfoController {
     public Result getOrderInfoById(@PathVariable("orderId") Long orderId){
         OrderInfo orderInfo = orderInfoService.getOrderInfoById(orderId);
         return Result.ok(orderInfo);
+    }
+
+    @ApiOperation("根据orderNo查询订单信息")
+    @GetMapping("inner/getOrderInfo/{orderNo}")
+    public OrderInfo getOrderInfoByOrderNo(@PathVariable("orderNo") String orderNo) {
+        return orderInfoService.getOrderInfoByOrderNo(orderNo);
     }
 }
 

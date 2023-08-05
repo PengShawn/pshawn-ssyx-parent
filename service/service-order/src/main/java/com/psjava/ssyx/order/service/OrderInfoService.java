@@ -1,9 +1,12 @@
 package com.psjava.ssyx.order.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.psjava.ssyx.model.order.OrderInfo;
 import com.psjava.ssyx.vo.order.OrderConfirmVo;
 import com.psjava.ssyx.vo.order.OrderSubmitVo;
+import com.psjava.ssyx.vo.order.OrderUserQueryVo;
 
 /**
  * <p>
@@ -29,4 +32,7 @@ public interface OrderInfoService extends IService<OrderInfo> {
 
     //支付成功！ 修改订单状态为已支付
     void orderPay(String orderNo);
+
+    //获取用户订单分页列表
+    IPage<OrderInfo> findUserOrderPage(Page<OrderInfo> pageParam, OrderUserQueryVo orderUserQueryVo);
 }
